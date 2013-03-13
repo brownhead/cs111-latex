@@ -34,11 +34,21 @@ fi
 
 echo
 
-pdflatex -interaction nonstopmode -output-directory bin hw${1}.tex
+INPUT_FILE=$DIR/hw${1}/hw${1}.tex
+if ! [ -e "$INPUT_FILE" ]; then
+	INPUT_FILE=$DIR/hw${1}.tex
+fi
+
+if ! [ -e "$INPUT_FILE" ]; then
+	echo ${RED_BOLD}FAILURE${RESET}: Could not find suitable input file.
+	exit 1
+fi
+
+pdflatex -interaction nonstopmode -output-directory bin "$INPUT_FILE"
 
 if [[ $? == 0 ]]; then
 	echo ${GREEN_BOLD}SUCCESS${RESET}
 	evince "$DIR/bin/hw${1}.pdf" 2> /dev/null &
 else
-	echo ${RED_BOLD}FAILURE${RESET}
+	echo ${RED_BOLD}FAILURE${RESET}: pdflatex failed.
 fi
