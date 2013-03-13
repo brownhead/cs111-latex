@@ -7,6 +7,12 @@ RED_BOLD=$BOLD`tput setaf 1`
 GREEN_BOLD=$BOLD`tput setaf 2`
 RESET=`tput sgr0`
 
+if [[ $# != 1 ]]; then
+	echo ${RED_BOLD}$0 requires exactly 1 argument.${RESET}
+	echo Usage: $0 HW_NUMBER
+	exit 1
+fi
+
 TO_DELETE=`ls "$DIR/bin/"`
 if [[ $TO_DELETE != "" ]]; then
 	echo ${RED_BOLD}DELETING${RESET}: $TO_DELETE
