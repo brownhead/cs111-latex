@@ -1,0 +1,38 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+BOLD=`tput bold`
+RED_BOLD=$BOLD`tput setaf 1`
+GREEN_BOLD=$BOLD`tput setaf 2`
+RESET=`tput sgr0`
+
+TO_DELETE=`ls "$DIR/bin/"`
+if [[ $TO_DELETE != "" ]]; then
+	echo ${RED_BOLD}DELETING${RESET}: $TO_DELETE
+
+	# Give the user a moment to abort.
+	sleep 1
+	echo -n .
+	sleep 1
+	echo .
+	sleep 1
+
+	if rm -f "$DIR/bin/"*; then
+		echo ${GREEN_BOLD}DELETED${RESET}
+	else
+		echo ${RED_BOLD}FAILURE${RESET}
+		exit 1
+	fi
+fi
+
+echo
+
+pdflatex -interaction nonstopmode -output-directory bin hw${1}.tex
+
+if [[ $? == 0 ]]; then
+	echo ${GREEN_BOLD}SUCCESS${RESET}
+	evince "$DIR/bin/hw${1}.pdf" 2> /dev/null &
+else
+	echo ${RED_BOLD}FAILURE${RESET}
+fi
